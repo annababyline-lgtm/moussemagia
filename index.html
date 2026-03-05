@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mousse Magia</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:Poppins;
+background:#111;
+color:white;
+}
+
+header{
+text-align:center;
+padding:40px;
+background:black;
+}
+
+.logo{
+width:180px;
+height:180px;
+border-radius:50%;
+object-fit:cover;
+box-shadow:0 0 25px gold;
+animation:flutuar 4s ease-in-out infinite;
+}
+
+@keyframes flutuar{
+0%{transform:translateY(0)}
+50%{transform:translateY(-12px)}
+100%{transform:translateY(0)}
+}
+
+h1{
+color:gold;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:#1c1c1c;
+border-radius:15px;
+padding:20px;
+margin-bottom:20px;
+box-shadow:0 10px 30px black;
+}
+
+.title{
+font-size:22px;
+color:gold;
+margin-bottom:10px;
+}
+
+.item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin:12px 0;
+}
+
+.controls button{
+background:gold;
+border:none;
+padding:6px 12px;
+font-size:16px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.controls span{
+margin:0 8px;
+}
+
+.cartInfo{
+background:#000;
+padding:20px;
+border-radius:10px;
+margin-top:20px;
+}
+
+.finalizar{
+background:gold;
+border:none;
+padding:15px;
+width:100%;
+font-size:18px;
+border-radius:10px;
+cursor:pointer;
+margin-top:10px;
+}
+
+input,textarea,select{
+width:100%;
+padding:10px;
+border-radius:6px;
+border:none;
+margin-top:10px;
+}
+
+footer{
+text-align:center;
+padding:40px;
+color:#aaa;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<img src="logo.jpeg" class="logo">
+
+<h1>Mousse Magia</h1>
+
+<p>🍮 Sobremesas artesanais irresistíveis</p>
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h3>📋 Dados para entrega</h3>
+
+<input id="nomePedido" placeholder="Seu nome">
+<input id="enderecoPedido" placeholder="Seu endereço para entrega">
+
+</div>
+
+<div class="card">
+
+<div class="title">🍋 Mousse de Limão</div>
+
+<div class="item">
+<span>200ml — R$8</span>
+<div class="controls">
+<button onclick="menos('l200')">-</button>
+<span id="l200">0</span>
+<button onclick="mais('l200')">+</button>
+</div>
+</div>
+
+<div class="item">
+<span>140ml — R$6</span>
+<div class="controls">
+<button onclick="menos('l140')">-</button>
+<span id="l140">0</span>
+<button onclick="mais('l140')">+</button>
+</div>
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="title">🥭 Mousse de Maracujá</div>
+
+<div class="item">
+<span>200ml — R$8</span>
+<div class="controls">
+<button onclick="menos('m200')">-</button>
+<span id="m200">0</span>
+<button onclick="mais('m200')">+</button>
+</div>
+</div>
+
+<div class="item">
+<span>140ml — R$6</span>
+<div class="controls">
+<button onclick="menos('m140')">-</button>
+<span id="m140">0</span>
+<button onclick="mais('m140')">+</button>
+</div>
+</div>
+
+</div>
+
+<div class="cartInfo">
+
+<h3>🛒 Seu pedido</h3>
+
+<p id="total">Total: R$0</p>
+
+<p id="frete">🚚 Faltam 6 unidades para ganhar frete grátis</p>
+
+<h3>💳 Forma de pagamento</h3>
+
+<select id="pagamento" onchange="mostrarPix()">
+<option value="">Selecione</option>
+<option value="pix">Pix</option>
+<option value="cartao">Cartão</option>
+<option value="especie">Espécie</option>
+</select>
+
+<div id="pixArea"></div>
+
+<button class="finalizar" onclick="pedido()">Finalizar Pedido 🍮</button>
+
+</div>
+
+</div>
+
+<footer>
+
+© Mousse Magia
+
+</footer>
+
+<script>
+
+let carrinho={
+l200:0,
+l140:0,
+m200:0,
+m140:0
+}
+
+function atualizarTotal(){
+
+let total=
+carrinho.l200*8+
+carrinho.l140*6+
+carrinho.m200*8+
+carrinho.m140*6
+
+document.getElementById("total").innerText="Total: R$"+total
+
+atualizarFrete()
+
+}
+
+function totalUnidades(){
+
+return carrinho.l200+
+carrinho.l140+
+carrinho.m200+
+carrinho.m140
+
+}
+
+function atualizarFrete(){
+
+let unidades=totalUnidades()
+
+let faltam=6-unidades
+
+let frete=document.getElementById("frete")
+
+if(unidades>=6){
+
+frete.innerText="🎉 Você ganhou frete grátis!"
+
+}else{
+
+frete.innerText="🚚 Faltam "+faltam+" unidades para ganhar frete grátis"
+
+}
+
+}
+
+function mais(item){
+
+carrinho[item]++
+document.getElementById(item).innerText=carrinho[item]
+atualizarTotal()
+
+}
+
+function menos(item){
+
+if(carrinho[item]>0){
+
+carrinho[item]--
+document.getElementById(item).innerText=carrinho[item]
+atualizarTotal()
+
+}
+
+}
+
+function mostrarPix(){
+
+let tipo=document.getElementById("pagamento").value
+let area=document.getElementById("pixArea")
+
+area.innerHTML=""
+
+let chave="e246a716-6a7b-4965-817e-7c5e619e845d"
+
+if(tipo==="pix"){
+
+let qr=`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${chave}`
+
+area.innerHTML=`
+
+<h3>🔳 Pagamento via Pix</h3>
+
+<img src="${qr}">
+
+<p>Chave Pix:</p>
+<p>${chave}</p>
+
+<button onclick="copiarPix()" style="background:gold;border:none;padding:10px;border-radius:8px;cursor:pointer;">
+📋 Copiar chave Pix
+</button>
+
+`
+
+}
+
+if(tipo==="cartao"){
+area.innerHTML="<p>💳 Pagamento no cartão na entrega.</p>"
+}
+
+if(tipo==="especie"){
+area.innerHTML="<p>💵 Pagamento em dinheiro na entrega.</p>"
+}
+
+}
+
+function copiarPix(){
+
+navigator.clipboard.writeText("e246a716-6a7b-4965-817e-7c5e619e845d")
+
+alert("Chave Pix copiada!")
+
+}
+
+function pedido(){
+
+let nome=document.getElementById("nomePedido").value
+let endereco=document.getElementById("enderecoPedido").value
+
+if(nome==""||endereco==""){
+alert("Preencha nome e endereço")
+return
+}
+
+let msg="✨ *Pedido - Mousse Magia* 🍮%0A%0A"
+
+msg+="👤 Nome: "+nome+"%0A"
+msg+="📍 Endereço: "+endereco+"%0A%0A"
+
+let total=0
+
+if(carrinho.l200>0){
+msg+="🍋 Limão 200ml x"+carrinho.l200+"%0A"
+total+=carrinho.l200*8
+}
+
+if(carrinho.l140>0){
+msg+="🍋 Limão 140ml x"+carrinho.l140+"%0A"
+total+=carrinho.l140*6
+}
+
+if(carrinho.m200>0){
+msg+="🥭 Maracujá 200ml x"+carrinho.m200+"%0A"
+total+=carrinho.m200*8
+}
+
+if(carrinho.m140>0){
+msg+="🥭 Maracujá 140ml x"+carrinho.m140+"%0A"
+total+=carrinho.m140*6
+}
+
+msg+="%0A💰 Total: R$"+total+"%0A"
+
+let pagamento=document.getElementById("pagamento").value
+
+msg+="💳 Pagamento: "+pagamento
+
+window.open("https://wa.me/5586998120194?text="+msg)
+
+}
+
+</script>
+
+</body>
+</html>
